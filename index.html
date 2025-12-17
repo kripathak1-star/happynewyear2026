@@ -1,70 +1,107 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Click Frenzy</title>
+  <title>Mini Runner</title>
   <style>
     body {
+      margin: 0;
+      overflow: hidden;
+      background: #222;
+      color: white;
       font-family: Arial;
       text-align: center;
-      margin-top: 40px;
-      background: #111;
-      color: white;
     }
-    button {
-      font-size: 24px;
-      padding: 20px 40px;
-      cursor: pointer;
-      border: none;
-      border-radius: 12px;
-      background: #00ff99;
-      transition: transform 0.1s;
+    canvas {
+      background: linear-gradient(#555, #222);
+      display: block;
+      margin: auto;
     }
-    button:active {
-      transform: scale(0.9);
-    }
-    #score {
-      font-size: 28px;
-      margin: 20px;
-    }
-    #timer {
-      font-size: 20px;
-      color: #ffcc00;
+    h2 {
+      margin: 5px;
     }
   </style>
 </head>
 <body>
 
-  <h1>🔥 Click Frenzy 🔥</h1>
-  <p id="timer">Time: 10</p>
-  <p id="score">Score: 0</p>
-  <button id="clickBtn">TAP FAST!</button>
+<h2>🏃 Mini Runner (Subway Style)</h2>
+<canvas id="game" width="360" height="600"></canvas>
 
-  <script>
-    let score = 0;
-    let time = 10;
-    let gameOn = true;
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
 
-    const btn = document.getElementById("clickBtn");
-    const scoreText = document.getElementById("score");
-    const timerText = document.getElementById("timer");
+let player = { x: 160, y: 500, w: 40, h: 40 };
+let obstacles = [];
+let score = 0;
+let speed = 3;
+let gameOver = false;
 
-    btn.addEventListener("click", () => {
-      if (!gameOn) return;
-      score++;
-      scoreText.innerText = "Score: " + score;
-    });
+function spawnObstacle() {
+  let lane = Math.floor(Math.random() * 3);
+  obstacles.push({
+    x: 60 + lane * 120,
+    y: -40,
+    w: 40,
+    h: 40
+  });
+}
 
-    const timer = setInterval(() => {
-      time--;
-      timerText.innerText = "Time: " + time;
-      if (time === 0) {
-        gameOn = false;
-        btn.innerText = "GAME OVER 😵";
-        clearInterval(timer);
-        alert("Your Score: " + score);
-      }
-    }, 1000);
-  </script>
+setInterval(spawnObstacle, 1200);
+
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowLeft" && player.x > 60) player.x -= 120;
+  if (e.key === "ArrowRight" && player.x < 300) player.x += 120;
+});
+
+function drawPlayer() {
+  ctx.fillStyle = "#00ff99";
+  ctx.fillRect(player.x, player.y, player.w, player.h);
+}
+
+function drawObstacles() {
+  ctx.fillStyle = "red";
+  obstacles.forEach(o => {
+    o.y += speed;
+    ctx.fillRect(o.x, o.y, o.w, o.h);
+
+    // collision
+    if (
+      player.x < o.x + o.w &&
+      player.x + player.w > o.x &&
+      player.y < o.y + o.h &&
+      player.y + player.h > o.y
+    ) {
+      gameOver = true;
+    }
+  });
+}
+
+function gameLoop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (gameOver) {
+    ctx.fillStyle = "white";
+    ctx.font = "30px Arial";
+    ctx.fillText("GAME OVER", 90, 280);
+    ctx.fillText("Score: " + score, 110, 320);
+    return;
+  }
+
+  drawPlayer();
+  drawObstacles();
+
+  score++;
+  if (score % 300 === 0) speed++;
+
+  ctx.fillStyle = "white";
+  ctx.font = "18px Arial";
+  ctx.fillText("Score: " + score, 10, 20);
+
+  requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
+</script>
 
 </body>
 </html>
