@@ -1,51 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Click Game</title>
+  <title>Click Frenzy</title>
   <style>
     body {
       font-family: Arial;
       text-align: center;
-      margin-top: 50px;
+      margin-top: 40px;
+      background: #111;
+      color: white;
     }
     button {
-      font-size: 20px;
-      padding: 15px 30px;
+      font-size: 24px;
+      padding: 20px 40px;
       cursor: pointer;
+      border: none;
+      border-radius: 12px;
+      background: #00ff99;
+      transition: transform 0.1s;
+    }
+    button:active {
+      transform: scale(0.9);
+    }
+    #score {
+      font-size: 28px;
+      margin: 20px;
+    }
+    #timer {
+      font-size: 20px;
+      color: #ffcc00;
     }
   </style>
 </head>
 <body>
 
-  <h1>Click the Button 🎮</h1>
+  <h1>🔥 Click Frenzy 🔥</h1>
+  <p id="timer">Time: 10</p>
   <p id="score">Score: 0</p>
-  <button id="clickBtn">CLICK ME</button>
+  <button id="clickBtn">TAP FAST!</button>
 
   <script>
     let score = 0;
+    let time = 10;
+    let gameOn = true;
 
-    document.getElementById("clickBtn").addEventListener("click", () => {
+    const btn = document.getElementById("clickBtn");
+    const scoreText = document.getElementById("score");
+    const timerText = document.getElementById("timer");
+
+    btn.addEventListener("click", () => {
+      if (!gameOn) return;
       score++;
-      document.getElementById("score").innerText = "Score: " + score;
+      scoreText.innerText = "Score: " + score;
     });
+
+    const timer = setInterval(() => {
+      time--;
+      timerText.innerText = "Time: " + time;
+      if (time === 0) {
+        gameOn = false;
+        btn.innerText = "GAME OVER 😵";
+        clearInterval(timer);
+        alert("Your Score: " + score);
+      }
+    }, 1000);
   </script>
 
 </body>
 </html>
-<script
-  type="text/javascript"
-  src="https://pl28271873.effectivegatecpm.com/65/f0/07/65f007f28aa6c955a62f7f115be3fd6a.js"
-></script>
-<script type="text/javascript">
-  atOptions = {
-  	'key' : '24a00f52a20520f5278358cea46b3d9c',
-  	'format' : 'iframe',
-  	'height' : 50,
-  	'width' : 320,
-  	'params' : {}
-  };
-</script>
-<script
-  type="text/javascript"
-  src="https://www.highperformanceformat.com/24a00f52a20520f5278358cea46b3d9c/invoke.js"
-></script>
