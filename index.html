@@ -4,35 +4,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Happy New Year</title>
 <style>
-body {
+body{
   margin:0;
   background:black;
   overflow:hidden;
-  font-family: Arial, sans-serif;
+  font-family:Arial, sans-serif;
 }
-h1 {
+h1{
   position:absolute;
   width:100%;
-  top:40%;
+  top:35%;
   text-align:center;
   color:white;
-  font-size:48px;
+  font-size:50px;
   text-shadow:0 0 30px gold;
-  z-index: 10;
+  z-index:10;
 }
-canvas {
+canvas{
   position:fixed;
   top:0;
   left:0;
 }
-button {
+#btn{
   position:absolute;
   bottom:20px;
   width:100%;
   background:gold;
   border:none;
+  padding:15px;
   font-size:20px;
-  padding:10px;
 }
 </style>
 </head>
@@ -40,25 +40,26 @@ button {
 <body>
 
 <h1>🎆 Happy New Year 🎆<br>From Krish ❤️</h1>
-<button onclick="start()">Tap to start sound 🔊</button>
+<button id="btn">Tap to start fireworks sound 🔊</button>
 <canvas id="c"></canvas>
 
-<audio id="music" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" loop></audio>
+<audio id="sound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_aa3e92fd0c.mp3?filename=fireworks-14414.mp3" loop></audio>
 
 <script>
-var c = document.getElementById("c");
-var ctx = c.getContext("2d");
-c.width = innerWidth;
-c.height = innerHeight;
+var c=document.getElementById("c");
+var ctx=c.getContext("2d");
+c.width=innerWidth;
+c.height=innerHeight;
 
-var particles = [];
+var p=[];
 
-function firework() {
-  var x = Math.random() * c.width;
-  var y = Math.random() * c.height / 2;
-  for (var i = 0; i < 80; i++) {
-    particles.push({
-      x:x, y:y,
+function explode(){
+  var x=Math.random()*c.width;
+  var y=Math.random()*c.height/2;
+  for(var i=0;i<100;i++){
+    p.push({
+      x:x,
+      y:y,
       vx:Math.random()*6-3,
       vy:Math.random()*6-3,
       life:100,
@@ -67,28 +68,28 @@ function firework() {
   }
 }
 
-setInterval(firework, 1200);
+setInterval(explode,1200);
 
-function draw() {
+function animate(){
   ctx.fillStyle="rgba(0,0,0,0.2)";
   ctx.fillRect(0,0,c.width,c.height);
-
-  for (var i=particles.length-1;i>=0;i--) {
-    var p=particles[i];
-    p.x+=p.vx;
-    p.y+=p.vy;
-    p.life--;
-    ctx.fillStyle=p.color;
-    ctx.fillRect(p.x,p.y,3,3);
-    if(p.life<=0) particles.splice(i,1);
+  for(var i=p.length-1;i>=0;i--){
+    var o=p[i];
+    o.x+=o.vx;
+    o.y+=o.vy;
+    o.life--;
+    ctx.fillStyle=o.color;
+    ctx.fillRect(o.x,o.y,3,3);
+    if(o.life<=0)p.splice(i,1);
   }
-  requestAnimationFrame(draw);
+  requestAnimationFrame(animate);
 }
-draw();
+animate();
 
-function start(){
-  document.getElementById("music").play();
-}
+document.getElementById("btn").onclick=function(){
+  document.getElementById("sound").play();
+  this.style.display="none";
+};
 </script>
 
 </body>
